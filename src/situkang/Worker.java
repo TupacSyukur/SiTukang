@@ -14,25 +14,47 @@ public class Worker extends Customer{
     private int fees;
     private String experience;
     private double rating;
-    private Work work_type;
-    private final Customer[] work_order = new Customer[25];
-    private int iter_work_order = 0;
+    private Work[] work_list = new Work[15];
+    private Customer[] work_order = new Customer[25];
+    private int numberOfOrderWorker = 0;
+    private int numberOfWork = 0;
 
-    public Worker(String expertise, int fees, String experience, double rating, Work work_type, int id, String name, int phone_number, String address, String sex, int age) {
+    public Worker(int id, String name, int phone_number, String address, String sex, int age) {
+        super(id, name, phone_number, address, sex, age);
+        this.fees = 0;
+        this.rating = 0.0;
+    }
+
+    public Worker(String expertise, int fees, String experience, double rating, int id, String name, int phone_number, String address, String sex, int age) {
         super(id, name, phone_number, address, sex, age);
         this.expertise = expertise;
-        this.fees = fees;
+        this.fees = 0;
         this.experience = experience;
-        this.rating = rating;
-        this.work_type = work_type;
-    }
-    
-    public Work getWork_type() {
-        return work_type;
+        this.rating = 0.0;
     }
 
-    public void setWork_type(Work work_type) {
-        this.work_type = work_type;
+    public Work[] getWork_list() {
+        return work_list;
+    }
+
+    public Customer[] getWork_order() {
+        return work_order;
+    }
+
+    public int getnumberOfOrderWorker() {
+        return numberOfOrderWorker;
+    }
+
+    public int getNumberOfWork() {
+        return numberOfWork;
+    }
+    
+    public Work[] getWork_type() {
+        return work_list;
+    }
+
+    public void setWork_type(Work[] work_type) {
+        this.work_list = work_type;
     }
 
     public String getExpertise() {
@@ -67,9 +89,14 @@ public class Worker extends Customer{
         this.rating = rating;
     }
     
+    public void addWorkList(Work w) {
+        this.work_list[this.numberOfWork] = w;
+        this.numberOfWork += 1;
+    }
+    
     public void accept_book(Customer c) {
-        this.work_order[this.iter_work_order] = c;
-        this.iter_work_order += 1;
+        this.work_order[this.numberOfOrderWorker] = c;
+        this.numberOfOrderWorker += 1;
     }
     
     public void access_progress() {
@@ -78,6 +105,16 @@ public class Worker extends Customer{
     
     public void add_bill(int add) {
         this.fees += add;
+    }
+    
+    public double income() {
+        double sum = 0;
+        
+        for (int i = 0; i < this.numberOfOrderWorker; i++) {
+            sum += this.work_order[i].getBill();
+        }
+        
+        return sum;
     }
     
 }

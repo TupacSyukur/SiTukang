@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package situkang;
-import work.Work;
 /**
  *
  * @author user
@@ -15,9 +14,9 @@ public class Customer {
     private String address;
     private String sex;
     private int age;
-    private final Worker[] order = new Worker[25];
-    private int iter_order = 0;
-    private final int[] bill = new int[25];
+    private Worker[] order = new Worker[25];
+    private int numberOfOrder = 0;
+    private double bill = 0;
     
 
     public Customer(int id, String name, int phone_number, String address, String sex, int age) {
@@ -76,19 +75,39 @@ public class Customer {
     public void setAge(int age) {
         this.age = age;
     }
+
+    public int getNumberOfOrder() {
+        return numberOfOrder;
+    }
+
+    public Worker[] getOrder() {
+        return order;
+    }
+
+    public double getBill() {
+        return bill;
+    }
     
     public void booking(Worker worker) {
-        this.order[this.iter_order] = worker;
-        this.iter_order++;
+        this.order[this.numberOfOrder] = worker;
+        this.numberOfOrder++;
     }
     
     public void searching() {
         
     }
     
-    public void bill() {
-        for (int i = 0; i < this.iter_order; i++) {
-            this.bill[i] = this.order[i].getFees();
+    public void setBill() {
+        double b = 0;
+        for (int i = 0; i < this.numberOfOrder; i++) {
+            Worker w = this.order[i];
+            for (int j = 0; j < w.getNumberOfWork(); j++) {
+                if (w.getWork_list()[j].getId() == id) {
+                    b += w.getWork_list()[j].getFees();
+                }
+            }
         }
+        
+        this.bill = b;
     }
 }
