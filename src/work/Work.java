@@ -61,10 +61,5 @@ public class Work {
 
     public void setEstimation(int estimation) {
         this.estimation = estimation;
-    }
-    
-    public void show_work() {
-        
-    }
-    
+    }    
 }
