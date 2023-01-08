@@ -14,14 +14,18 @@ public class Work {
     private String name;
     private String category;
     private int estimation;
+    private String description;
 
-    public Work(int id, double fees, String name, String category, int estimation) {
+    public Work(int id, double fees, String name, String category, int estimation, String description) {
         this.id = id;
-        this.fees = 0;
+        this.fees = fees;
         this.name = name;
         this.category = category;
         this.estimation = estimation;
+        this.description = description;
     }
+
+    
 
     public int getId() {
         return id;
@@ -61,5 +65,15 @@ public class Work {
 
     public void setEstimation(int estimation) {
         this.estimation = estimation;
-    }    
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    
 }

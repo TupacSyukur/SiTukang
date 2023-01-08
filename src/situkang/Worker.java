@@ -4,17 +4,21 @@
  */
 package situkang;
 import work.Work;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.*;
 
 /**
  *
  * @author user
  */
 public class Worker extends Customer{
+    Connection connection;
     private String expertise;
     private int fees;
     private String experience;
     private double rating;
-    private Work[] work_list = new Work[15];
+    private ArrayList<Work> work_list = new ArrayList<Work>();
     private Customer[] work_order = new Customer[25];
     private int numberOfOrderWorker = 0;
     private int numberOfWork = 0;
@@ -32,8 +36,12 @@ public class Worker extends Customer{
         this.experience = experience;
         this.rating = 0.0;
     }
+    
+    public void startConnection() {
+        this.connection = DatabaseConnection.getCon();
+    }
 
-    public Work[] getWork_list() {
+    public ArrayList<Work> getWork_list() {
         return work_list;
     }
 
@@ -47,14 +55,6 @@ public class Worker extends Customer{
 
     public int getNumberOfWork() {
         return numberOfWork;
-    }
-    
-    public Work[] getWork_type() {
-        return work_list;
-    }
-
-    public void setWork_type(Work[] work_type) {
-        this.work_list = work_type;
     }
 
     public String getExpertise() {
@@ -85,9 +85,32 @@ public class Worker extends Customer{
         return rating;
     }
     
-    public void addWorkList(Work w) {
-        this.work_list[this.numberOfWork] = w;
-        this.numberOfWork += 1;
+    public void addWorkList() {
+        //this.work_list.add(w);
+        int id;
+        double fees;
+        String name;
+        String category;
+        int estimation;
+        String description;
+        String query = "select * from work";
+        try {
+            startConnection();
+            PreparedStatement st = connection.prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+            while(rs.next()){
+                id = rs.getInt(1);
+                fees = rs.getDouble(2);
+                name = rs.getString(3);
+                category = rs.getString(4);
+                estimation = rs.getInt(5);
+                description = rs.getString(6);
+                Work w = new Work(id, fees, name, category, estimation, description);
+                this.work_list.add(w);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     public void accept_book(Customer c) {
