@@ -84,10 +84,6 @@ public class Worker extends Customer{
     public double getRating() {
         return rating;
     }
-
-    public void setRating(double rating) {
-        this.rating = rating;
-    }
     
     public void addWorkList(Work w) {
         this.work_list[this.numberOfWork] = w;
