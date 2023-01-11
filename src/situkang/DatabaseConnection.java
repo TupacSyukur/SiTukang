@@ -12,7 +12,7 @@ import java.sql.*;
 public class DatabaseConnection {
     private static java.sql.Connection conn;
     
-    public static Connection getCon() {
+    public static Connection getConnection() {
         if (conn == null) {
             try {
                 String url = "jdbc:mysql://localhost:3306/situkang";

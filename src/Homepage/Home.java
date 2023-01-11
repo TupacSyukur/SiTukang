@@ -6,7 +6,7 @@ package Homepage;
 import situkang.Customer;
 import situkang.Progress;
 import situkang.Worker;
-import work.Work;
+import situkang.Work;
 
 /**
  *

@@ -5,61 +5,51 @@
 package situkang;
 
 import javax.swing.DefaultListModel;
+import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.*;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author user
  */
-public class HomepageNew extends javax.swing.JFrame {
+public class HomepageCustomer extends javax.swing.JFrame {
 
     /**
-     * Creates new form HomepageNew
+     * Creates new form HomepageWorker
      */
-    public HomepageNew() {
-        initComponents();
-    }
-    private Worker w;
+    public static Customer customerHomepage;
+//    public ArrayList<Work> work_list = new ArrayList<Work>();
     Connection connection;
     DefaultListModel listTask = new DefaultListModel();
-    
-    public void startConnection() {
-        this.connection = DatabaseConnection.getCon();
+    public HomepageCustomer() {
+        initComponents();
+        if (!customerHomepage.getWork_order().isEmpty()) {
+            listTask.clear();
+            for (Work i: customerHomepage.getWork_order()) {
+                listTask.addElement(i.getName());
+            }
+        } else {
+            listTask.addElement("You don't have any booking progress");
+        }
+            
+        //listTask.addElement(w.getName());
+        this.username_worker.setText(customerHomepage.getName());
+        tasks.setModel(listTask);
     }
     
-    public void getWorker(String name) {
-        int id;
-        int phone_number;
-        String address;
-        String sex;
-        int age;
-        String expertise;
-        int fees;
-        String experience;
-        double rating;
-        String query = "'select * from worker where name="+name+"'";
-        try {
-            startConnection();
-            PreparedStatement st = connection.prepareStatement(query);
-            ResultSet rs = st.executeQuery(query);
-            while (rs.next()) {
-                id = rs.getInt(1);
-                phone_number = rs.getInt(2);
-                address = rs.getString(3);
-                sex = rs.getString(4);
-                age = rs.getInt(5);
-                expertise = rs.getString(6);
-                fees = rs.getInt(7);
-                experience = rs.getString(8);
-                rating = rs.getDouble(9);
-                Worker w1 = new Worker(expertise, fees, experience, rating, id, name ,phone_number, address, sex, age);
-                w1.addWorkList();
-                this.w = w1;
+    public String findDesc(String name) {
+        String desc = "None";
+//        System.out.print("Name: ");
+//        System.out.println(name);
+        for (Work i : customerHomepage.getWork_order()) {
+            if (i.getName().equals(name)) {
+                desc = i.getDescription();
             }
-        } catch(SQLException e) {
-            e.printStackTrace();
         }
+        return desc;
+        
     }
 
     /**
@@ -78,19 +68,16 @@ public class HomepageNew extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        tasks = new javax.swing.JList<>();
         desc = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         home_button = new javax.swing.JButton();
-        task_list = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        username_worker = new javax.swing.JLabel();
+        profile = new javax.swing.JButton();
+        book = new javax.swing.JButton();
 
         jLabel6.setText("jLabel6");
 
@@ -106,36 +93,26 @@ public class HomepageNew extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Incoming Booking");
+        jLabel3.setText("Your Booking Progress");
 
-        jList2.setBorder(null);
-        jScrollPane2.setViewportView(jList2);
-
-        desc.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-
-        jButton4.setText("Accept");
-        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton4MouseClicked(evt);
+        tasks.setBorder(null);
+        tasks.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                tasksValueChanged(evt);
             }
         });
+        jScrollPane2.setViewportView(tasks);
 
-        jButton5.setText("Decline");
+        desc.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         jPanel2.setBackground(new java.awt.Color(67, 67, 67));
 
         home_button.setBackground(new java.awt.Color(67, 67, 67));
+        home_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/situkang/resource/icons8-home-page-60.png"))); // NOI18N
         home_button.setBorder(null);
-
-        task_list.setBackground(new java.awt.Color(67, 67, 67));
-        task_list.setBorder(null);
 
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Home");
-
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Task List");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -144,29 +121,21 @@ public class HomepageNew extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(97, 97, 97)
-                        .addComponent(home_button))
+                        .addGap(173, 173, 173)
+                        .addComponent(jLabel5))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(111, 111, 111)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(80, 80, 80)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(task_list, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(163, 163, 163)
+                        .addComponent(home_button, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(home_button)
-                    .addComponent(task_list))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(13, Short.MAX_VALUE)
+                .addComponent(home_button, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel5))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addComponent(jLabel5)
+                .addGap(12, 12, 12))
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 217, 102));
@@ -174,12 +143,18 @@ public class HomepageNew extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Welcome Back");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("<username>");
+        username_worker.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        username_worker.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        username_worker.setText("<username>");
 
-        jButton3.setBackground(new java.awt.Color(255, 217, 102));
-        jButton3.setBorder(null);
+        profile.setBackground(new java.awt.Color(255, 217, 102));
+        profile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/situkang/resource/icons8-user-30.png"))); // NOI18N
+        profile.setBorder(null);
+        profile.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                profileMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -187,13 +162,13 @@ public class HomepageNew extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(125, 125, 125)
-                .addComponent(jLabel2)
+                .addComponent(username_worker)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(51, 51, 51)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
+                .addComponent(profile)
                 .addGap(26, 26, 26))
         );
         jPanel3Layout.setVerticalGroup(
@@ -202,32 +177,39 @@ public class HomepageNew extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1)
-                    .addComponent(jButton3))
+                    .addComponent(profile))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
+                .addComponent(username_worker)
                 .addContainerGap(18, Short.MAX_VALUE))
         );
+
+        book.setText("Book Now");
+        book.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bookMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(92, 92, 92)
-                        .addComponent(jButton4)
-                        .addGap(68, 68, 68)
-                        .addComponent(jButton5))
+                        .addContainerGap()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(17, 17, 17)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(desc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(17, Short.MAX_VALUE))
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(desc, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(140, 140, 140)
+                        .addComponent(book)))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -236,14 +218,12 @@ public class HomepageNew extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(desc, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(56, 56, 56)
-                .addComponent(desc, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
-                    .addComponent(jButton4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                .addComponent(book)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -261,10 +241,25 @@ public class HomepageNew extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jButton4MouseClicked
+    private void tasksValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_tasksValueChanged
+//        String test = tasks.getSelectedValue();
+//        System.out.println(test);
+        String d = findDesc(tasks.getSelectedValue());
+        this.desc.setText("<html>"+d+"</html>");
+    }//GEN-LAST:event_tasksValueChanged
+
+    private void bookMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bookMouseClicked
+        this.setVisible(false);
+        CustomerBooking cb = new CustomerBooking();
+        cb.setVisible(true);
+    }//GEN-LAST:event_bookMouseClicked
+
+    private void profileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profileMouseClicked
+        ProfileCustomer.customerProfile = customerHomepage;
+        ProfileCustomer p = new ProfileCustomer();
+        this.setVisible(false);
+        p.setVisible(true);
+    }//GEN-LAST:event_profileMouseClicked
 
     /**
      * @param args the command line arguments
@@ -283,37 +278,39 @@ public class HomepageNew extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(HomepageNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomepageCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(HomepageNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomepageCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(HomepageNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomepageCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(HomepageNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomepageCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new HomepageNew().setVisible(true);
+                new HomepageCustomer().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton book;
     private javax.swing.JLabel desc;
     private javax.swing.JButton home_button;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JList<String> jList2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -321,6 +318,8 @@ public class HomepageNew extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JButton task_list;
+    private javax.swing.JButton profile;
+    private javax.swing.JList<String> tasks;
+    private javax.swing.JLabel username_worker;
     // End of variables declaration//GEN-END:variables
 }

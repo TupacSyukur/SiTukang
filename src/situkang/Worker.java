@@ -3,10 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package situkang;
-import work.Work;
 import java.util.ArrayList;
 import java.sql.Connection;
-import java.sql.*;
 
 /**
  *
@@ -15,38 +13,30 @@ import java.sql.*;
 public class Worker extends Customer{
     Connection connection;
     private String expertise;
-    private int fees;
-    private String experience;
-    private double rating;
-    private ArrayList<Work> work_list = new ArrayList<Work>();
+    private double fees;
+    private ArrayList<Work> work_list = new ArrayList<>();
     private Customer[] work_order = new Customer[25];
     private int numberOfOrderWorker = 0;
     private int numberOfWork = 0;
 
-    public Worker(int id, String name, int phone_number, String address, String sex, int age) {
-        super(id, name, phone_number, address, sex, age);
+    public Worker(int id, String name, String phone_number, String address) {
+        super(id, name, phone_number, address);
         this.fees = 0;
-        this.rating = 0.0;
+        this.expertise = "";
     }
 
-    public Worker(String expertise, int fees, String experience, double rating, int id, String name, int phone_number, String address, String sex, int age) {
-        super(id, name, phone_number, address, sex, age);
+    public Worker(String expertise, double fees, int id, String name, String phone_number, String address) {
+        super(id, name, phone_number, address);
         this.expertise = expertise;
-        this.fees = 0;
-        this.experience = experience;
-        this.rating = 0.0;
+        this.fees = fees;
     }
     
     public void startConnection() {
-        this.connection = DatabaseConnection.getCon();
+        this.connection = DatabaseConnection.getConnection();
     }
 
     public ArrayList<Work> getWork_list() {
         return work_list;
-    }
-
-    public Customer[] getWork_order() {
-        return work_order;
     }
 
     public int getnumberOfOrderWorker() {
@@ -65,52 +55,40 @@ public class Worker extends Customer{
         this.expertise = expertise;
     }
 
-    public int getFees() {
+    public double getFees() {
         return fees;
     }
 
-    public void setFees(int fees) {
+    public void setFees(double fees) {
         this.fees = fees;
     }
-
-    public String getExperience() {
-        return experience;
-    }
-
-    public void setExperience(String experience) {
-        this.experience = experience;
-    }
-
-    public double getRating() {
-        return rating;
-    }
     
-    public void addWorkList() {
-        //this.work_list.add(w);
-        int id;
-        double fees;
-        String name;
-        String category;
-        int estimation;
-        String description;
-        String query = "select * from work";
-        try {
-            startConnection();
-            PreparedStatement st = connection.prepareStatement(query);
-            ResultSet rs = st.executeQuery();
-            while(rs.next()){
-                id = rs.getInt(1);
-                fees = rs.getDouble(2);
-                name = rs.getString(3);
-                category = rs.getString(4);
-                estimation = rs.getInt(5);
-                description = rs.getString(6);
-                Work w = new Work(id, fees, name, category, estimation, description);
-                this.work_list.add(w);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void addWorkList(Work w) {
+        this.work_list.add(w);
+//        int id;
+//        double fees;
+//        String name;
+//        String category;
+//        int estimation;
+//        String description;
+//        String query = "select * from work";
+//        try {
+//            startConnection();
+//            PreparedStatement st = connection.prepareStatement(query);
+//            ResultSet rs = st.executeQuery();
+//            while(rs.next()){
+//                id = rs.getInt(1);
+//                fees = rs.getDouble(2);
+//                name = rs.getString(3);
+//                category = rs.getString(4);
+//                estimation = rs.getInt(5);
+//                description = rs.getString(6);
+//                Work w = new Work(id, fees, name, category, estimation, description);
+//                this.work_list.add(w);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
     
     public void accept_book(Customer c) {
@@ -129,8 +107,8 @@ public class Worker extends Customer{
     public double income() {
         double sum = 0;
         
-        for (int i = 0; i < this.numberOfOrderWorker; i++) {
-            sum += this.work_order[i].getBill();
+        for (Work i : work_list) {
+            sum += i.getFees();
         }
         
         return sum;

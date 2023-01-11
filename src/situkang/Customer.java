@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package situkang;
+import java.util.ArrayList;
 /**
  *
  * @author user
@@ -10,22 +11,27 @@ package situkang;
 public class Customer {
     private int id;
     private String name;
-    private int phone_number;
+    private String phone_number;
     private String address;
-    private String sex;
-    private int age;
     private Worker[] order = new Worker[25];
+    private ArrayList<Work> work_order = new ArrayList<>();
     private int numberOfOrder = 0;
     private double bill = 0;
     
 
-    public Customer(int id, String name, int phone_number, String address, String sex, int age) {
+    public Customer(int id, String name, String phone_number, String address) {
         this.id = id;
         this.name = name;
         this.phone_number = phone_number;
         this.address = address;
-        this.sex = sex;
-        this.age = age;
+    }
+
+    public ArrayList<Work> getWork_order() {
+        return work_order;
+    }
+
+    public void setWork_order(ArrayList<Work> work_order) {
+        this.work_order = work_order;
     }
 
     public int getId() {
@@ -44,11 +50,11 @@ public class Customer {
         this.name = name;
     }
 
-    public int getPhone_number() {
+    public String getPhone_number() {
         return phone_number;
     }
 
-    public void setPhone_number(int phone_number) {
+    public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
     }
 
@@ -59,23 +65,7 @@ public class Customer {
     public void setAddress(String address) {
         this.address = address;
     }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
+    
     public int getNumberOfOrder() {
         return numberOfOrder;
     }
@@ -98,16 +88,16 @@ public class Customer {
     }
     
     public void setBill() {
-        double b = 0;
-        for (int i = 0; i < this.numberOfOrder; i++) {
-            Worker w = this.order[i];
-            for (int j = 0; j < w.getNumberOfWork(); j++) {
-                if (w.getWork_list()[j].getId() == id) {
-                    b += w.getWork_list()[j].getFees();
-                }
-            }
-        }
-        
-        this.bill = b;
+//        double b = 0;
+//        for (int i = 0; i < this.numberOfOrder; i++) {
+//            Worker w = this.order[i];
+//            for (int j = 0; j < w.getNumberOfWork(); j++) {
+//                if (w.getWork_list()[j].getId() == id) {
+//                    b += w.getWork_list()[j].getFees();
+//                }
+//            }
+//        }
+//        
+//        this.bill = b;
     }
 }
